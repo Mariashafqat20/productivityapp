@@ -1,0 +1,58 @@
+Resolving dependencies...
+Downloading packages...
+  characters 1.4.0 (1.4.1 available)
+  matcher 0.12.17 (0.12.18 available)
+  material_color_utilities 0.11.1 (0.13.0 available)
+  test_api 0.7.7 (0.7.8 available)
+Got dependencies!
+4 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing productivityapp...
+
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\screens\auth\forgot_password_screen.dart:4:8 - unused_import
+   info - Parameter 'key' could be a super parameter - lib\screens\auth\forgot_password_screen.dart:8:9 - use_super_parameters
+   info - Invalid use of a private type in a public API - lib\screens\auth\forgot_password_screen.dart:11:3 - library_private_types_in_public_api
+   info - Parameter 'key' could be a super parameter - lib\screens\auth\login_screen.dart:10:9 - use_super_parameters
+   info - Invalid use of a private type in a public API - lib\screens\auth\login_screen.dart:13:3 - library_private_types_in_public_api
+  error - The named parameter 'suffixIcon' isn't defined - lib\screens\auth\login_screen.dart:67:19 - undefined_named_parameter
+  error - Expected to find ']' - lib\screens\auth\login_screen.dart:96:17 - expected_token
+  error - Expected an identifier - lib\screens\auth\login_screen.dart:135:15 - missing_identifier
+  error - Expected to find ')' - lib\screens\auth\login_screen.dart:135:15 - expected_token
+  error - Expected to find ';' - lib\screens\auth\login_screen.dart:139:7 - expected_token
+warning - Dead code - lib\screens\auth\login_screen.dart:139:8 - dead_code
+  error - Expected an identifier - lib\screens\auth\login_screen.dart:139:8 - missing_identifier
+  error - Expected to find ';' - lib\screens\auth\login_screen.dart:139:8 - expected_token
+  error - Unexpected text ';' - lib\screens\auth\login_screen.dart:139:8 - unexpected_token
+  error - Expected an identifier - lib\screens\auth\login_screen.dart:140:5 - missing_identifier
+  error - Unexpected text ';' - lib\screens\auth\login_screen.dart:140:5 - unexpected_token
+   info - Unnecessary empty statement - lib\screens\auth\login_screen.dart:140:6 - empty_statements
+   info - Parameter 'key' could be a super parameter - lib\screens\auth\otp_verification_screen.dart:7:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\screens\auth\signup_screen.dart:13:3 - use_super_parameters
+  error - The named parameter 'suffixIcon' isn't defined - lib\screens\auth\signup_screen.dart:55:17 - undefined_named_parameter
+  error - The named parameter 'suffixIcon' isn't defined - lib\screens\auth\signup_screen.dart:62:17 - undefined_named_parameter
+   info - Constructors for public widgets should have a named 'key' parameter - lib\screens\dashboard\calendar_screen.dart:5:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\screens\dashboard\calendar_screen.dart:7:3 - library_private_types_in_public_api
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\dashboard\calendar_screen.dart:51:42 - deprecated_member_use
+   info - Constructors for public widgets should have a named 'key' parameter - lib\screens\dashboard\entry_point.dart:13:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\screens\dashboard\entry_point.dart:15:3 - library_private_types_in_public_api
+   info - The 'child' argument should be last in widget constructor invocations - lib\screens\dashboard\entry_point.dart:63:9 - sort_child_properties_last
+   info - Constructors for public widgets should have a named 'key' parameter - lib\screens\dashboard\entry_point.dart:80:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\screens\dashboard\entry_point.dart:82:5 - library_private_types_in_public_api
+warning - The value of the field '_descriptionController' isn't used - lib\screens\dashboard\entry_point.dart:88:33 - unused_field
+   info - The private field _priority could be 'final' - lib\screens\dashboard\entry_point.dart:93:9 - prefer_final_fields
+   info - Constructors for public widgets should have a named 'key' parameter - lib\screens\dashboard\home_screen.dart:8:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\screens\dashboard\home_screen.dart:10:3 - library_private_types_in_public_api
+   info - Don't use 'BuildContext's across async gaps - lib\screens\dashboard\home_screen.dart:19:33 - use_build_context_synchronously
+   info - Use a 'SizedBox' to add whitespace to a layout - lib\screens\dashboard\home_screen.dart:104:13 - sized_box_for_whitespace
+   info - Constructors for public widgets should have a named 'key' parameter - lib\screens\dashboard\tasks_screen.dart:7:7 - use_key_in_widget_constructors
+   info - Parameter 'key' could be a super parameter - lib\screens\onboarding\onboarding_screen.dart:8:9 - use_super_parameters
+   info - Invalid use of a private type in a public API - lib\screens\onboarding\onboarding_screen.dart:11:3 - library_private_types_in_public_api
+   info - Parameter 'key' could be a super parameter - lib\widgets\custom_button.dart:9:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\widgets\custom_textfield.dart:13:9 - use_super_parameters
+  error - Undefined name 'suffixIcon' - lib\widgets\custom_textfield.dart:44:23 - undefined_identifier
+   info - Parameter 'key' could be a super parameter - lib\widgets\task_card.dart:9:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\task_card.dart:21:32 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\task_card.dart:26:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\task_card.dart:33:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\task_card.dart:52:39 - deprecated_member_use
+
