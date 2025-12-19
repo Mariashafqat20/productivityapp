@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/user_provider.dart';
 import '../../core/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
@@ -86,10 +88,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 32),
                 CustomButton(
                   text: 'Login',
-                  onPressed: () {
+                  isLoading: Provider.of<UserProvider>(context).isLoading,
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // TODO: Real Authenticate
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => EntryPoint()));
+                      try {
+                        await Provider.of<UserProvider>(context, listen: false).login(
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                        );
+                        // Navigation handled by stream in main or check success here
+                        // Since we are not using a StreamBuilder for the whole app structure yet,
+                        // we can manually navigate on success if no error thrown
+                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => EntryPoint()));
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Login Failed: ${e.toString()}")),
+                        );
+                      }
                     }
                   },
                 ),

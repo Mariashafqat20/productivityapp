@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,9 +7,13 @@ import 'providers/course_provider.dart';
 import 'providers/task_provider.dart';
 import 'providers/user_provider.dart';
 import 'screens/onboarding/onboarding_screen.dart';
+// import 'firebase_options.dart'; // Make sure to run flutterfire configure to generate this
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    // options: DefaultFirebaseOptions.currentPlatform, // Uncomment after generating options
+  );
   // await DatabaseHelper.instance.database; // Init DB
   runApp(MyApp());
 }

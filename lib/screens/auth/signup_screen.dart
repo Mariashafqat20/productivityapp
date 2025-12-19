@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/user_provider.dart';
 import '../../core/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
@@ -117,9 +119,21 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(height: 32),
                 CustomButton(
                   text: 'Create Account',
-                  onPressed: () {
+                  isLoading: Provider.of<UserProvider>(context).isLoading,
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => EntryPoint()), (route) => false);
+                      try {
+                        await Provider.of<UserProvider>(context, listen: false).signup(
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                          nameController.text.trim(),
+                        );
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => EntryPoint()), (route) => false);
+                      } catch (e) {
+                         ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Signup Failed: ${e.toString()}")),
+                        );
+                      }
                     }
                   },
                 ),
