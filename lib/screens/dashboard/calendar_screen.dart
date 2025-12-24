@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants.dart';
 import '../notifications/notifications_screen.dart';
 import '../profile/profile_screen.dart';
+import '../../providers/task_provider.dart';
+import '../../models/task.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -17,26 +20,36 @@ class _CalendarScreenState extends State<CalendarScreen> {
   int _scheduleFilterIndex = 0; // 0: Planned, 1: Completed
 
   @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+    // Ensure tasks are loaded when this screen opens
+    Future.microtask(() =>
+        Provider.of<TaskProvider>(context, listen: false).loadTasks()
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        toolbarHeight: 80, // Add more height/spacing
+        toolbarHeight: 80,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen())),
             child: CircleAvatar(
               backgroundColor: AppColors.primary,
-              child: Icon(Icons.person, color: Colors.white), // Profile Icon
+              child: Icon(Icons.person, color: Colors.white),
             ),
           ),
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [ // Clean Header, maybe remove subtitle if too cluttered? User requested "do not write the heading in too top add some apcing"
+          children: [
             Text('Calendar & Scheduler', style: AppTextStyles.heading2.copyWith(fontSize: 20)),
-             Text('Manage your study sessions', style: TextStyle(fontSize: 12, color: AppColors.textLight, fontWeight: FontWeight.normal)),
+            Text('Manage your study sessions', style: TextStyle(fontSize: 12, color: AppColors.textLight, fontWeight: FontWeight.normal)),
           ],
         ),
         backgroundColor: Colors.transparent,
@@ -44,9 +57,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.notifications_none, color: AppColors.textDark),
-             onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => NotificationsScreen()));
-             },
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => NotificationsScreen()));
+            },
           ),
         ],
       ),
@@ -78,7 +91,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(24),
-                   // No shadow in image, just clean text
                 ),
                 child: TableCalendar(
                   firstDay: DateTime.utc(2020, 10, 16),
@@ -98,7 +110,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       shape: BoxShape.circle,
                     ),
                     todayDecoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withValues(alpha: 0.3),
                       shape: BoxShape.circle,
                     ),
                     defaultTextStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textDark),
@@ -116,32 +128,95 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ),
               SizedBox(height: 24),
-              
+
               // Today's Schedule Header & Filter
-               Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 children: [
-                   Text("Today's Schedule", style: AppTextStyles.heading3.copyWith(fontSize: 16)),
-                   Container(
-                     decoration: BoxDecoration(
-                       border: Border.all(color: AppColors.primary),
-                       borderRadius: BorderRadius.circular(8),
-                     ),
-                     child: Row(
-                       children: [
-                         _buildScheduleFilter("Planned", 0),
-                         _buildScheduleFilter("Completed", 1),
-                       ],
-                     ),
-                   ),
-                 ],
-               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Today's Schedule", style: AppTextStyles.heading3.copyWith(fontSize: 16)),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.primary),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        _buildScheduleFilter("Planned", 0),
+                        _buildScheduleFilter("Completed", 1),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 20),
-              
-              // Schedule Items
-              _buildScheduleItem("08:00 - 10:00 Pm", "Revise OOP Concepts", "Course : Programming", "High", Color(0xFFFFE0E0), Color(0xFFFF5252)),
-              Divider(height: 24, color: Colors.grey[200]),
-              _buildScheduleItem("08:00 - 10:00 Pm", "Revise OOP Concepts", "Course : Programming", "Medium", Color(0xFFFFF9C4), Color(0xFFFBC02D)),
+
+              // Dynamic Schedule Items from Provider
+              Consumer<TaskProvider>(
+                builder: (context, taskProvider, child) {
+                  // Filter tasks based on selected date and status
+                  final displayTasks = taskProvider.tasks.where((task) {
+                    try {
+                      DateTime taskDate = DateTime.parse(task.date);
+                      return isSameDay(taskDate, _selectedDay);
+                    } catch (e) {
+                      return false;
+                    }
+                  }).where((task) {
+                    if (_scheduleFilterIndex == 0) {
+                      return task.isCompleted == 0; // Planned
+                    } else {
+                      return task.isCompleted == 1; // Completed
+                    }
+                  }).toList();
+
+                  if (displayTasks.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Text(
+                        "No tasks for this day",
+                        style: TextStyle(color: AppColors.textLight),
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: displayTasks.map((task) {
+                      // Determine priority colors
+                      Color tagColor;
+                      Color tagBg;
+                      String tagText;
+
+                      if (task.priority >= 7) {
+                        tagText = "High";
+                        tagBg = Color(0xFFFFE0E0);
+                        tagColor = Color(0xFFFF5252);
+                      } else if (task.priority >= 4) {
+                        tagText = "Medium";
+                        tagBg = Color(0xFFFFF9C4);
+                        tagColor = Color(0xFFFBC02D);
+                      } else {
+                        tagText = "Low";
+                        tagBg = Color(0xFFD6FFE3);
+                        tagColor = Color(0xFF00C853);
+                      }
+
+                      return Column(
+                        children: [
+                          _buildScheduleItem(
+                              "${task.startTime} - ${task.endTime}",
+                              task.title,
+                              "Course : ${task.course ?? 'General'}",
+                              tagText,
+                              tagBg,
+                              tagColor
+                          ),
+                          Divider(height: 24, color: Colors.grey[200]),
+                        ],
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -159,13 +234,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primary : Colors.transparent,
-            borderRadius: index == 0 
-                ? BorderRadius.horizontal(left: Radius.circular(11)) 
+            borderRadius: index == 0
+                ? BorderRadius.horizontal(left: Radius.circular(11))
                 : index == 2 ? BorderRadius.horizontal(right: Radius.circular(11)) : null,
           ),
           child: Text(title, style: TextStyle(
-            color: isSelected ? Colors.white : AppColors.textLight,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal
+              color: isSelected ? Colors.white : AppColors.textLight,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal
           )),
         ),
       ),
@@ -173,21 +248,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildScheduleFilter(String title, int index) {
-     bool isSelected = _scheduleFilterIndex == index;
-     return GestureDetector(
-       onTap: () => setState(() => _scheduleFilterIndex = index),
-       child: Container(
-         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-         decoration: BoxDecoration(
-           color: isSelected ? AppColors.primary : Colors.transparent,
-           borderRadius: BorderRadius.circular(7), // Slightly less than outer border
-         ),
-         child: Text(title, style: TextStyle(
-           color: isSelected ? Colors.white : AppColors.textDark,
-           fontSize: 12
-         )),
-       ),
-     );
+    bool isSelected = _scheduleFilterIndex == index;
+    return GestureDetector(
+      onTap: () => setState(() => _scheduleFilterIndex = index),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(7),
+        ),
+        child: Text(title, style: TextStyle(
+            color: isSelected ? Colors.white : AppColors.textDark,
+            fontSize: 12
+        )),
+      ),
+    );
   }
 
   Widget _buildScheduleItem(String time, String title, String course, String priorityText, Color tagBg, Color tagText) {

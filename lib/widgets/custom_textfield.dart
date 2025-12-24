@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -44,7 +45,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.neutral,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: TextFormField(
         controller: widget.controller,
@@ -53,25 +54,26 @@ class _CustomTextFieldState extends State<CustomTextField> {
         validator: widget.validator,
         onTap: widget.onTap,
         readOnly: widget.readOnly,
-        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textDark),
+        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textDark, fontSize: 14.sp),
         decoration: InputDecoration(
           hintText: widget.hintText,
-          hintStyle: AppTextStyles.bodyMedium,
+          hintStyle: AppTextStyles.bodyMedium.copyWith(fontSize: 14.sp),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          prefixIcon: widget.prefixIcon != null ? Icon(widget.prefixIcon, color: AppColors.textLight) : null,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          prefixIcon: widget.prefixIcon != null ? Icon(widget.prefixIcon, color: AppColors.textLight, size: 24.sp) : null,
           suffixIcon: widget.isPassword
               ? IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                    color: AppColors.textLight,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                )
+            icon: Icon(
+              _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+              color: AppColors.textLight,
+              size: 24.sp,
+            ),
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+          )
               : widget.suffixIcon,
         ),
       ),

@@ -7,6 +7,7 @@ import '../../widgets/custom_textfield.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
 import '../dashboard/entry_point.dart';
+import '../../services/auth_service.dart'; // Import AuthService
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -68,11 +69,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   isPassword: true,
                   suffixIcon: Icon(Icons.visibility_off_outlined, color: AppColors.textLight),
                   validator: (value) {
-                     if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                     }
-                     if (value.length < 6) return 'Password must be at least 6 characters';
-                     return null;
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (value.length < 6) return 'Password must be at least 6 characters';
+                    return null;
                   },
                 ),
                 SizedBox(height: 16),
@@ -96,10 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           emailController.text.trim(),
                           passwordController.text.trim(),
                         );
-                        // Navigation handled by stream in main or check success here
-                        // Since we are not using a StreamBuilder for the whole app structure yet,
-                        // we can manually navigate on success if no error thrown
-                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => EntryPoint()));
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => EntryPoint()));
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Login Failed: ${e.toString()}")),
@@ -119,7 +117,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 24),
                 OutlinedButton(
-                  onPressed: () {}, 
+                  onPressed: () async {
+                    try {
+                      await AuthService().signInWithGoogle();
+                      if (mounted) {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => EntryPoint()));
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Google Sign-In Failed: $e")),
+                      );
+                    }
+                  },
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -128,9 +137,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Icon(Icons.g_mobiledata, size: 32, color: Colors.blue), // Placeholder for Google Icon
-                       SizedBox(width: 8),
-                       Text('Login with Google', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                      Icon(Icons.g_mobiledata, size: 32, color: Colors.blue),
+                      SizedBox(width: 8),
+                      Text('Login with Google', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600, color: AppColors.textDark)),
                     ],
                   ),
                 ),
@@ -155,4 +164,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

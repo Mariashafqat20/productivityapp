@@ -5,6 +5,7 @@ import '../../core/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
 import '../dashboard/entry_point.dart';
+import '../../services/auth_service.dart'; // Import AuthService
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -100,14 +101,14 @@ class _SignupScreenState extends State<SignupScreen> {
                     return null;
                   },
                 ),
-                 SizedBox(height: 16),
+                SizedBox(height: 16),
                 CustomTextField(
                   hintText: 'Confirm Password',
                   controller: confirmPasswordController,
                   isPassword: true,
                   suffixIcon: Icon(Icons.visibility_off_outlined, color: AppColors.textLight),
                   validator: (value) {
-                     if (value == null || value.isEmpty) {
+                    if (value == null || value.isEmpty) {
                       return 'Please confirm your password';
                     }
                     if (value != passwordController.text) {
@@ -130,7 +131,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         );
                         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => EntryPoint()), (route) => false);
                       } catch (e) {
-                         ScaffoldMessenger.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Signup Failed: ${e.toString()}")),
                         );
                       }
@@ -145,9 +146,20 @@ class _SignupScreenState extends State<SignupScreen> {
                     Expanded(child: Divider()),
                   ],
                 ),
-                 SizedBox(height: 24),
+                SizedBox(height: 24),
                 OutlinedButton(
-                  onPressed: () {}, 
+                  onPressed: () async {
+                    try {
+                      await AuthService().signInWithGoogle();
+                      if (mounted) {
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => EntryPoint()), (route) => false);
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Google Sign-In Failed: $e")),
+                      );
+                    }
+                  },
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -156,9 +168,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Icon(Icons.g_mobiledata, size: 32, color: Colors.blue), 
-                       SizedBox(width: 8),
-                       Text('Sign up with Google', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                      Icon(Icons.g_mobiledata, size: 32, color: Colors.blue),
+                      SizedBox(width: 8),
+                      Text('Sign up with Google', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600, color: AppColors.textDark)),
                     ],
                   ),
                 ),

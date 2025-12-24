@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constants.dart';
 import '../../widgets/custom_button.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'otp_verification_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -42,7 +41,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   style: AppTextStyles.bodyLarge,
                 ),
                 SizedBox(height: 32),
-                 Container(
+                Container(
                   decoration: BoxDecoration(
                     color: AppColors.neutral,
                     borderRadius: BorderRadius.circular(12),
@@ -73,12 +72,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   text: 'Send OTP Link',
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                       Navigator.push(context, MaterialPageRoute(builder: (_) => OtpVerificationScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => OtpVerificationScreen()));
                     }
                   },
                 ),
                 SizedBox(height: 24),
-                 Align(
+                Align(
                   alignment: Alignment.center,
                   child: TextButton(
                     onPressed: () => Navigator.pop(context),

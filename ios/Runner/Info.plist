@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Productivity App</string>
+	<string>Productivityapp</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -45,5 +45,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your photo library to update your profile picture.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>We need access to your camera to take a profile picture.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need access to the microphone for video.</string>
 </dict>
 </plist>

@@ -21,6 +21,31 @@ class Task {
     this.course,
   });
 
+  // Added copyWith method to fix the error
+  Task copyWith({
+    int? id,
+    String? title,
+    String? description,
+    String? date,
+    String? startTime,
+    String? endTime,
+    int? priority,
+    int? isCompleted,
+    String? course,
+  }) {
+    return Task(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      priority: priority ?? this.priority,
+      isCompleted: isCompleted ?? this.isCompleted,
+      course: course ?? this.course,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
